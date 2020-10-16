@@ -13,6 +13,7 @@ app.use(bodyParser.json());
 app.use(cors())
 app.use(express.static('services'))
 app.use(fileUpload())
+
 const port = 5000
 
 const client = new MongoClient(uri, { useNewUrlParser: true,useUnifiedTopology: true  });
@@ -26,13 +27,15 @@ client.connect(err => {
     const file = req.files.file;
     const title = req.body.title;
     const description = req.body.description;
-    const filePath = `${__dirname}/services/${file.name}`
-    file.mv(filePath,err=>{
-      if (err) {
-        console.log(err);
-      res.status(500).send({msg:'failed to upload'})
-      }
-      const newImg = fs.readFileSync(filePath)
+
+    // const filePath = `${__dirname}/services/${file.name}`
+
+    // file.mv(filePath,err=>{
+    //   if (err) {
+    //     console.log(err);
+    //   res.status(500).send({msg:'failed to upload'})
+    //   }
+      const newImg = file.data;
       const encImg = newImg.toString('base64')
 
       var image = {
@@ -43,17 +46,17 @@ client.connect(err => {
 
       servicesCollection.insertOne({title,description,image})
       .then(result=>{
-        fs.remove(filePath,error=>{
-          if(error){
-            console.log(error)
-            res.status(500).send({msg:'failed to upload'})
-          }
+        // fs.remove(filePath,error=>{
+        //   if(error){
+        //     console.log(error)
+        //     res.status(500).send({msg:'failed to upload'})
+        //   }
           res.send(result.insertedCount>0)
-        })
+        // })
      
        
       })
-    })
+    // })
       
     })
     
