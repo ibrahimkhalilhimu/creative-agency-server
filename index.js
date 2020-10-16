@@ -19,6 +19,8 @@ const client = new MongoClient(uri, { useNewUrlParser: true,useUnifiedTopology: 
 client.connect(err => {
   const servicesCollection = client.db("CreativeAgency").collection("services");
   const reviewCollection = client.db("CreativeAgency").collection("review");
+  const orderCollection = client.db("CreativeAgency").collection("order");
+  const adminCollection = client.db("CreativeAgency").collection("admin");
   
   app.post('/addServices',(req,res)=>{
     const file = req.files.file;
@@ -48,20 +50,17 @@ client.connect(err => {
           }
           res.send(result.insertedCount>0)
         })
-        console.log(result.insertedCount);
+     
        
       })
     })
       // return res.send({name:file.name,path:`/${file.name}`})
     })
-  
- 
-
-
+    
   app.get('/service', (req, res) => {
     servicesCollection.find({})
     .toArray( (err, documents) => {
-      console.log(documents,err);
+    
         res.send(documents);
     })
   })
@@ -73,7 +72,6 @@ client.connect(err => {
     console.log(review);
     reviewCollection.insertOne(review)
     .then(result=>{
-      console.log(result.insertedCount);
       res.send(result.insertedCount>0)
     })
   })
@@ -81,8 +79,51 @@ client.connect(err => {
   app.get('/review', (req, res) => {
     reviewCollection.find({})
     .toArray( (err, documents) => {
-      console.log(documents,err);
         res.send(documents);
+    })
+  })
+
+  
+  app.post('/addOder',(req,res)=>{
+    const order = req.body;
+    console.log(order);
+    orderCollection.insertOne(order)
+    .then(result=>{
+      res.send(result.insertedCount>0)
+    })
+  })
+
+  app.get('/orders', (req, res) => {
+    console.log(req.query.email);
+    orderCollection.find({email:req.query.email})
+    .toArray( (err, documents) => {
+      console.log(err,documents);
+        res.send(documents);
+    })
+  })
+
+  app.get('/order', (req, res) => {
+    orderCollection.find({})
+    .toArray( (err, documents) => {
+        res.send(documents);
+    })
+  })
+
+  app.post('/makeAdmin',(req,res)=>{
+    const admin = req.body;
+    console.log(admin);
+    adminCollection.insertOne(admin)
+    .then(result=>{
+      res.send(result.insertedCount>0)
+    })
+  })
+
+  
+  app.post('/isAdmin', (req, res) => {
+    const email = req.body.email
+    adminCollection.find({email:email})
+    .toArray( (err, admin) => {
+        res.send(admin.length>0);
     })
   })
 
