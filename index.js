@@ -54,7 +54,7 @@ client.connect(err => {
        
       })
     })
-      // return res.send({name:file.name,path:`/${file.name}`})
+      
     })
     
   app.get('/service', (req, res) => {
