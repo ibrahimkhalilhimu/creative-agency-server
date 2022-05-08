@@ -6,11 +6,11 @@ const fileUpload = require('express-fileupload');
 const MongoClient = require('mongodb').MongoClient;
 
 require('dotenv').config()
-// console.log(process.env.DB_USER,process.env.DB_PASS,process.env.DB_NAME);
+
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.huwqv.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
-console.log(uri);
+
 
 
 const app = express()
@@ -146,12 +146,12 @@ app.get('/', function (req, res) {
   res.send('hello world')
 })
 
-// app.listen(process.env.PORT || port)
+app.listen(process.env.PORT || port)
 
 
-app.listen(port,()=>{
-  console.log('Server running on port',port);
-})
+// app.listen(port,()=>{
+//   console.log('Server running on port',port);
+// })
 
 // heroku server problem solve
 
